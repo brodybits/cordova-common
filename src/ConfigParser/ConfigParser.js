@@ -86,11 +86,6 @@ function findElementAttributeValue (attributeName, elems) {
     return value || '';
 }
 
-function removeChildren (el, selector) {
-    const matches = el.findall(selector);
-    matches.forEach(child => el.remove(child));
-}
-
 ConfigParser.prototype = {
     getAttribute: function (attr) {
         return this.doc.getroot().attrib[attr];
@@ -433,10 +428,17 @@ ConfigParser.prototype = {
      * @param id name of the plugin
      */
     removePlugin: function (id) {
-        if (!id) return;
-        const root = this.doc.getroot();
-        removeChildren(root, `./plugin/[@name="${id}"]`);
-        removeChildren(root, `./feature/param[@name="id"][@value="${id}"]/..`);
+        if (id) {
+            var plugins = this.doc.findall('./plugin/[@name="' + id + '"]')
+                .concat(this.doc.findall('./feature/param[@name="id"][@value="' + id + '"]/..'));
+            var children = this.doc.getroot().getchildren();
+            plugins.forEach(function (plugin) {
+                var idx = children.indexOf(plugin);
+                if (idx > -1) {
+                    children.splice(idx, 1);
+                }
+            });
+        }
     },
 
     // Add any element to the root
@@ -467,7 +469,14 @@ ConfigParser.prototype = {
      * @param  {String} name the engine name.
      */
     removeEngine: function (name) {
-        removeChildren(this.doc.getroot(), `./engine/[@name="${name}"]`);
+        var engines = this.doc.findall('./engine/[@name="' + name + '"]');
+        for (var i = 0; i < engines.length; i++) {
+            var children = this.doc.getroot().getchildren();
+            var idx = children.indexOf(engines[i]);
+            if (idx > -1) {
+                children.splice(idx, 1);
+            }
+        }
     },
     getEngines: function () {
         var engines = this.doc.findall('./engine');
