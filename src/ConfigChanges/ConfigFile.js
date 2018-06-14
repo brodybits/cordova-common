@@ -166,8 +166,6 @@ function resolveConfigFilePath (project_dir, platform, file) {
     var filepath = path.join(project_dir, file);
     var matches;
 
-    file = path.normalize(file);
-
     if (file.indexOf('*') > -1) {
         // handle wildcards in targets using glob.
         matches = modules.glob.sync(path.join(project_dir, '**', file));
@@ -197,7 +195,7 @@ function resolveConfigFilePath (project_dir, platform, file) {
         } else if (file.endsWith('strings.xml')) {
             // Plugins really shouldn't mess with strings.xml, since it's able to be localized
             filepath = path.join(project_dir, 'app', 'src', 'main', 'res', 'values', 'strings.xml');
-        } else if (file.includes(path.join('res', 'xml'))) {
+        } else if (file.match(/res\/xml/)) {
             // Catch-all for all other stored XML configuration in legacy plugins
             var config_file = path.basename(file);
             filepath = path.join(project_dir, 'app', 'src', 'main', 'res', 'xml', config_file);
