@@ -22,7 +22,7 @@ const EventEmitter = require('events').EventEmitter;
 const CordovaError = require('./CordovaError/CordovaError');
 const EOL = require('os').EOL;
 
-var INSTANCE;
+const INSTANCE_KEY = Symbol.for('org.apache.cordova.common.CordovaLogger');
 
 /**
  * @class CordovaLogger
@@ -55,9 +55,14 @@ function CordovaLogger () {
  *
  * @return  {CordovaLogger}  Logger instance
  */
-CordovaLogger.get = function () {
-    return INSTANCE || (INSTANCE = new CordovaLogger());
-};
+CordovaLogger.get =
+    function () {
+        // @brodybits TBD what is global ???
+        if (Object.getOwnPropertySymbols(global).indexOf(INSTANCE_KEY) === -1) {
+            global[INSTANCE_KEY] = new CordovaLogger();
+        }
+        return global[INSTANCE_KEY];
+    };
 
 CordovaLogger.VERBOSE = 'verbose';
 CordovaLogger.NORMAL = 'normal';
