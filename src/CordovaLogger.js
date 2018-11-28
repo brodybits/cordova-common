@@ -35,6 +35,27 @@ const INSTANCE_KEY = Symbol.for('org.apache.cordova.common.CordovaLogger');
  * used instead to acquire the logger instance.
  */
 class CordovaLogger {
+    // Encapsulate the default logging level values with constants:
+    static get VERBOSE () { return 'verbose'; }
+    static get NORMAL () { return 'normal'; }
+    static get WARN () { return 'warn'; }
+    static get INFO () { return 'info'; }
+    static get ERROR () { return 'error'; }
+    static get RESULTS () { return 'results'; }
+
+    /**
+     * Static method to create new or acquire existing instance.
+     *
+     * @returns {CordovaLogger} Logger instance
+     */
+    static get () {
+        // @brodybits TBD what is global ???
+        if (Object.getOwnPropertySymbols(global).indexOf(INSTANCE_KEY) === -1) {
+            global[INSTANCE_KEY] = new CordovaLogger();
+        }
+        return global[INSTANCE_KEY];
+    }
+
     constructor () {
         /** @private */
         this.levels = {};
@@ -59,27 +80,6 @@ class CordovaLogger {
 
         this.setLevel(CordovaLogger.NORMAL);
     }
-
-    /**
-     * Static method to create new or acquire existing instance.
-     *
-     * @returns {CordovaLogger} Logger instance
-     */
-    static get () {
-        // @brodybits TBD what is global ???
-        if (Object.getOwnPropertySymbols(global).indexOf(INSTANCE_KEY) === -1) {
-            global[INSTANCE_KEY] = new CordovaLogger();
-        }
-        return global[INSTANCE_KEY];
-    }
-
-    // Encapsulate the default logging level values with constants:
-    static get VERBOSE () { return 'verbose'; }
-    static get NORMAL () { return 'normal'; }
-    static get WARN () { return 'warn'; }
-    static get INFO () { return 'info'; }
-    static get ERROR () { return 'error'; }
-    static get RESULTS () { return 'results'; }
 
     /**
      * Emits log message to process' stdout/stderr depending on message's
