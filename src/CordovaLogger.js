@@ -17,10 +17,10 @@
  under the License.
  */
 
-var ansi = require('ansi');
-var EventEmitter = require('events').EventEmitter;
-var CordovaError = require('./CordovaError/CordovaError');
-var EOL = require('os').EOL;
+const ansi = require('ansi');
+const EventEmitter = require('events').EventEmitter;
+const CordovaError = require('./CordovaError/CordovaError');
+const EOL = require('os').EOL;
 
 var INSTANCE;
 
