@@ -18,6 +18,7 @@
 */
 
 var path = require('path');
+
 var superspawn = require('../src/superspawn');
 
 var LS = process.platform === 'win32' ? 'dir' : 'ls';
@@ -125,5 +126,4 @@ describe('spawn method', function () {
             });
         });
     });
-
 });

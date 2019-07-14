@@ -16,13 +16,15 @@
 */
 
 var rewire = require('rewire');
+
 var configFile = rewire('../../src/ConfigChanges/ConfigFile');
+
 var fs = require('fs-extra');
 var path = require('path');
+
 var projectDir = path.join('project_dir', 'app', 'src', 'main');
 
 describe('ConfigFile tests', function () {
-
     beforeEach(function () {
         spyOn(configFile, 'isBinaryPlist').and.callThrough();
     });
@@ -37,6 +39,7 @@ describe('ConfigFile tests', function () {
         spyOn(fs, 'readFileSync').and.returnValue('not bplist');
         expect(configFile.isBinaryPlist('someFile')).toBe(false);
     });
+
     it('isBinaryPlist should return true if binary', function () {
         spyOn(fs, 'readFileSync').and.returnValue('bplist');
         expect(configFile.isBinaryPlist('someFile')).toBe(true);

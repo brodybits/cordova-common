@@ -23,7 +23,9 @@
 var Q = require('q');
 var fs = require('fs-extra');
 var path = require('path');
+
 var rewire = require('rewire');
+
 var PluginManager = rewire('../src/PluginManager');
 var PluginInfo = require('../src/PluginInfo/PluginInfo');
 var ConfigChanges = require('../src/ConfigChanges/ConfigChanges');
@@ -37,7 +39,6 @@ var FAKE_LOCATIONS = {
 };
 
 describe('PluginManager class', function () {
-
     beforeEach(function () {
         spyOn(ConfigChanges, 'PlatformMunger');
         spyOn(fs, 'outputJsonSync');
