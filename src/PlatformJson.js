@@ -17,6 +17,7 @@
 var fs = require('fs-extra');
 var path = require('path');
 var endent = require('endent');
+
 var mungeutil = require('./ConfigChanges/munge-util');
 
 function PlatformJson (filePath, platform, root) {
@@ -89,7 +90,6 @@ PlatformJson.prototype.addPlugin = function (pluginId, variables, isTopLevel) {
  * @returns {this} Current PlatformJson instance to allow calls chaining
  */
 PlatformJson.prototype.addPluginMetadata = function (pluginInfo) {
-
     var installedModules = this.root.modules || [];
 
     var installedPaths = installedModules.map(function (installedModule) {
@@ -169,10 +169,12 @@ PlatformJson.prototype.addUninstalledPluginToPrepareQueue = function (pluginId, 
  */
 PlatformJson.prototype.makeTopLevel = function (pluginId) {
     var plugin = this.root.dependent_plugins[pluginId];
+
     if (plugin) {
         delete this.root.dependent_plugins[pluginId];
         this.root.installed_plugins[pluginId] = plugin;
     }
+
     return this;
 };
 
@@ -184,6 +186,7 @@ PlatformJson.prototype.makeTopLevel = function (pluginId) {
  */
 PlatformJson.prototype.generateMetadata = function () {
     const stringify = o => JSON.stringify(o, null, 2);
+
     return endent`
         cordova.define('cordova/plugin_list', function(require, exports, module) {
           module.exports = ${stringify(this.root.modules)};
@@ -213,6 +216,7 @@ function fix_munge (root) {
     root.dependent_plugins = root.dependent_plugins || {};
 
     var munge = root.config_munge;
+
     if (!munge.files) {
         var new_munge = { files: {} };
         for (var file in munge) {
@@ -242,7 +246,6 @@ function fix_munge (root) {
  * @param (JsModule|Object)  jsModule  A js-module entry from PluginInfo class to generate metadata for
  */
 function ModuleMetadata (pluginId, jsModule) {
-
     if (!pluginId) throw new TypeError('pluginId argument must be a valid plugin id');
     if (!jsModule.src && !jsModule.name) throw new TypeError('jsModule argument must contain src or/and name properties');
 
@@ -253,9 +256,11 @@ function ModuleMetadata (pluginId, jsModule) {
     if (jsModule.clobbers && jsModule.clobbers.length > 0) {
         this.clobbers = jsModule.clobbers.map(function (o) { return o.target; });
     }
+
     if (jsModule.merges && jsModule.merges.length > 0) {
         this.merges = jsModule.merges.map(function (o) { return o.target; });
     }
+
     if (jsModule.runs) {
         this.runs = true;
     }

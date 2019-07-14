@@ -18,14 +18,19 @@
 */
 
 var et = require('elementtree');
+
 var xml = require('../util/xml-helpers');
+
 var CordovaError = require('../CordovaError/CordovaError');
+
 var fs = require('fs-extra');
+
 var events = require('../events');
 
 /** Wraps a config.xml file */
 function ConfigParser (path) {
     this.path = path;
+
     try {
         this.doc = xml.parseElementtreeSync(path);
         this.cdvNamespacePrefix = getCordovaNamespacePrefix(this.doc);
@@ -34,7 +39,9 @@ function ConfigParser (path) {
         events.emit('error', 'Parsing ' + path + ' failed');
         throw e;
     }
+
     var r = this.doc.getroot();
+
     if (r.tag !== 'widget') {
         throw new CordovaError(path + ' has incorrect root node name (expected "widget", was "' + r.tag + '")');
     }
@@ -46,16 +53,19 @@ function getNodeTextSafe (el) {
 
 function findOrCreate (doc, name) {
     var ret = doc.find(name);
+
     if (!ret) {
         ret = new et.Element(name);
         doc.getroot().append(ret);
     }
+
     return ret;
 }
 
 function getCordovaNamespacePrefix (doc) {
     var rootAtribs = Object.getOwnPropertyNames(doc.getroot().attrib);
     var prefix = 'cdv';
+
     for (var j = 0; j < rootAtribs.length; j++) {
         if (rootAtribs[j].startsWith('xmlns:') &&
             doc.getroot().attrib[rootAtribs[j]] === 'http://cordova.apache.org/ns/1.0') {
@@ -64,6 +74,7 @@ function getCordovaNamespacePrefix (doc) {
             break;
         }
     }
+
     return prefix;
 }
 
@@ -74,7 +85,6 @@ function getCordovaNamespacePrefix (doc) {
  * @return {String}
  */
 function findElementAttributeValue (attributeName, elems) {
-
     elems = Array.isArray(elems) ? elems : [ elems ];
 
     var value = elems.filter(function (elem) {
@@ -153,6 +163,7 @@ ConfigParser.prototype = {
     author: function () {
         return getNodeTextSafe(this.doc.find('author'));
     },
+
     getGlobalPreference: function (name) {
         return findElementAttributeValue(name, this.doc.findall('preference'));
     },
@@ -165,6 +176,7 @@ ConfigParser.prototype = {
         }
         pref.attrib.value = value;
     },
+
     getPlatformPreference: function (name, platform) {
         return findElementAttributeValue(name, this.doc.findall('./platform[@name="' + platform + '"]/preference'));
     },
@@ -186,7 +198,6 @@ ConfigParser.prototype = {
         pref.attrib.value = value;
     },
     getPreference: function (name, platform) {
-
         var platformPreference = '';
 
         if (platform) {
@@ -194,7 +205,6 @@ ConfigParser.prototype = {
         }
 
         return platformPreference || this.getGlobalPreference(name);
-
     },
     setPreference: function (name, platform, value) {
         if (!value) {
@@ -208,6 +218,7 @@ ConfigParser.prototype = {
             this.setGlobalPreference(name, value);
         }
     },
+
     /**
      * Returns all resources for the platform specified.
      * @param  {String} platform     The platform.
@@ -360,6 +371,7 @@ ConfigParser.prototype = {
 
         return scriptElements.filter(filterScriptByHookType);
     },
+
     /**
     * Returns a list of plugin (IDs).
     *
@@ -386,6 +398,7 @@ ConfigParser.prototype = {
             return this.getPlugin(pluginId);
         }, this);
     },
+
     /**
      * Adds a plugin element. Does not check for duplicates.
      * @name addPlugin
@@ -510,6 +523,7 @@ ConfigParser.prototype = {
             };
         });
     },
+
     /* Get all the access tags */
     getAccesses: function () {
         var accesses = this.doc.findall('./access');
@@ -534,6 +548,7 @@ ConfigParser.prototype = {
             };
         });
     },
+
     /* Get all the allow-navigation tags */
     getAllowNavigations: function () {
         var allow_navigations = this.doc.findall('./allow-navigation');
@@ -550,6 +565,7 @@ ConfigParser.prototype = {
             };
         });
     },
+
     /* Get all the allow-intent tags */
     getAllowIntents: function () {
         var allow_intents = this.doc.findall('./allow-intent');
@@ -559,6 +575,7 @@ ConfigParser.prototype = {
             };
         });
     },
+
     /* Get all edit-config tags */
     getEditConfigs: function (platform) {
         var platform_edit_configs = this.doc.findall('./platform[@name="' + platform + '"]/edit-config');
@@ -605,11 +622,14 @@ ConfigParser.prototype = {
 
 function featureToPlugin (featureElement) {
     var plugin = {};
+
     plugin.variables = [];
+
     var pluginVersion,
         pluginSrc;
 
     var nodes = featureElement.findall('param');
+
     nodes.forEach(function (element) {
         var n = element.attrib.name;
         var v = element.attrib.value;
@@ -625,10 +645,12 @@ function featureToPlugin (featureElement) {
     });
 
     var spec = pluginSrc || pluginVersion;
+
     if (spec) {
         plugin.spec = spec;
     }
 
     return plugin;
 }
+
 module.exports = ConfigParser;
