@@ -95,9 +95,9 @@ function remove_plugin_changes (pluginInfo, is_top_level) {
     var self = this;
 
     var platform_config = self.platformJson.root;
-    var plugin_vars = is_top_level ?
-        platform_config.installed_plugins[pluginInfo.id] :
-        platform_config.dependent_plugins[pluginInfo.id];
+    var plugin_vars = is_top_level
+        ? platform_config.installed_plugins[pluginInfo.id]
+        : platform_config.dependent_plugins[pluginInfo.id];
     var edit_config_changes = null;
     if (pluginInfo.getEditConfigs) {
         edit_config_changes = pluginInfo.getEditConfigs(self.platform);
