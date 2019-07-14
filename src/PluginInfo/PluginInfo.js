@@ -68,10 +68,10 @@ function PluginInfo (dirname) {
 
         if (!src || !target) {
             var msg =
-                'Malformed <asset> tag. Both "src" and "target" attributes'
-                + 'must be specified in\n'
-                + self.filepath
-                ;
+                'Malformed <asset> tag. ' +
+                'Both "src" and "target" attributes must be specified in\n' +
+                self.filepath;
+
             throw new Error(msg);
         }
 
@@ -113,11 +113,12 @@ function PluginInfo (dirname) {
 
         if (!dep.id) {
             var msg =
-                '<dependency> tag is missing id attribute in '
-                + self.filepath
-                ;
+                '<dependency> tag is missing id attribute in ' +
+                self.filepath;
+
             throw new CordovaError(msg);
         }
+
         return dep;
     }
 
