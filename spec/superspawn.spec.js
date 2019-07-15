@@ -43,7 +43,7 @@ describe('spawn method', function () {
         return superspawn.spawn(LS, [], { stdio: 'pipe' })
             .progress(progressSpy)
             .then(function () {
-                expect(progressSpy).toHaveBeenCalledWith({ 'stdout': jasmine.any(String) });
+                expect(progressSpy).toHaveBeenCalledWith({ stdout: jasmine.any(String) });
             });
     });
 
@@ -53,7 +53,7 @@ describe('spawn method', function () {
             .then(() => {
                 fail('Expected promise to be rejected');
             }, () => {
-                expect(progressSpy).toHaveBeenCalledWith({ 'stderr': jasmine.any(String) });
+                expect(progressSpy).toHaveBeenCalledWith({ stderr: jasmine.any(String) });
             });
     });
 
