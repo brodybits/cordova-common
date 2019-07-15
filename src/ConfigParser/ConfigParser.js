@@ -85,7 +85,7 @@ function getCordovaNamespacePrefix (doc) {
  * @return {String}
  */
 function findElementAttributeValue (attributeName, elems) {
-    elems = Array.isArray(elems) ? elems : [ elems ];
+    elems = Array.isArray(elems) ? elems : [elems];
 
     var value = elems.filter(function (elem) {
         return elem.attrib.name.toLowerCase() === attributeName.toLowerCase();

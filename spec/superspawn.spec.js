@@ -114,7 +114,7 @@ describe('spawn method', function () {
 
     describe('operation on windows', () => {
         const TEST_SCRIPT = path.join(__dirname, 'fixtures/echo-args.cmd');
-        const TEST_ARGS = [ 'install', 'foo@^1.2.3', 'c o r d o v a' ];
+        const TEST_ARGS = ['install', 'foo@^1.2.3', 'c o r d o v a'];
 
         it('should escape arguments if `cmd` is not an *.exe', () => {
             if (process.platform !== 'win32') {
