@@ -49,7 +49,7 @@ CordovaError.EXTERNAL_TOOL_ERROR = 1;
  * @returns {string} Error code string name
  */
 CordovaError.prototype.getErrorCodeName = function () {
-     for (const key of Object.keys(CordovaError)) {
+    for (const key of Object.keys(CordovaError)) {
         if (CordovaError[key] === this.code) {
             return key;
         }
